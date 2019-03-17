@@ -79,8 +79,8 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                <div><img src="{{ asset('logo.png')}}" alt=""></div>
-                    TFOLC Leave Portal
+                <div>@include('layouts.partials.logo')</div>
+                    Tfolc Leave Portal
                 </div>
 
            
@@ -88,3 +88,6 @@
         </div>
     </body>
 </html>
+@push('scripts')
+@include('layouts.scripts.sites_js')
+@endpush
