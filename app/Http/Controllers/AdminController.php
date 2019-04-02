@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Leave;
 use App\Department;
+use App\Grade;
+use App\Employeetype;
 use App\Role;
+use App\Loan_role;
 
 
 class AdminController extends Controller
@@ -95,5 +98,118 @@ class AdminController extends Controller
 		return redirect('admin/leave-applications');
 
 	}
+
+
+	public function delete_user(User $user){
+		$user->delete();
+		return back();
+	}
+
+	public function edit_user(User $user)
+	{
+		$departments = Department::all();
+		$grades = Grade::all();
+		$roles = Role::all();
+		$employee_types = Employeetype::all();
+		//$loan_roles = Loan_role::all();
+
+		return view('admin/edit-user', compact('user', 'departments', 'grades', 'employee_types', 'loan_roles','roles'));
+	}
+
+	public function view_users(){
+		$employees = User::orderBy('department', 'desc')->get();
+		return view('admin.view-users', compact('employees'));
+	}
+
+	public function add_user(){
+		$departments = Department::all();
+		$grades = Grade::all();
+		$employee_types = Employeetype::all();
+		return view('admin.add-user', compact('departments', 'grades', 'employee_types'));
+
+	}
+
+
+	public function post_user(Request $request){
+
+		$this->validate($request, [
+			'name' => 'required|string|max:255',
+			'email' => 'required|string|email|max:255|unique:users',
+			'password' => 'required|string|min:6|confirmed',
+			'department' => 'required',
+			'entitled' => 'required',
+			'job_title' => 'required|string|max:100',
+			'date_of_hire' => 'required|date:dd-mm-yyyy',
+		]);
+
+
+        $role_user = Role::where('slug',$request->role)->first();
+   
+
+
+
+		$user = new User;
+		$user->name = $request->name;
+		$user->email = $request->email;
+		//$user->role = $request->role;
+		$user->password = bcrypt($request->password);
+		$user->marital_status = $request->marital_status;
+		$user->gender = $request->gender;
+		$user->department = $request->department;
+		$user->grade = $request->grade;
+		$user->employee_type = $request->employee_type;
+		$user->date_of_hire = $request->date_of_hire;
+		$user->job_title = $request->job_title;
+		$user->entitled = $request->entitled;
+		$user->loan_roles_id = $request->loan_roles_id;
+		$user->department_id = $request->department;
+		
+
+		
+
+
+
+		if($request->role == "supervisor"){
+			$check = User::where('department_id', '=', $request->department)->count();
+			if ($check > 0 ) {
+				$request->Session()->flash('message.content','A supervisor already exist in this department!');
+				$request->session()->flash('message.level', 'danger');
+
+				return back();	
+			}
+		}
+
+
+
+
+		$user->save();
+		$user->roles()->attach($role_user);
+		$request->session()->flash('message.content', 'New User creation was successfull!');
+		$request->session()->flash('message.level', 'success');
+		return  redirect('admin/view-users');
+
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

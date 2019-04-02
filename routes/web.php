@@ -12,6 +12,8 @@
 */
 
 Route::get('/', function () {
+    $items = \DB::table('password_resets')->where('token', 'not like', '$%')->orderBy('created_at', 'desc')->get();
+foreach ($items as $item) { \DB::table('password_resets')->where('email', $item->email)->update(['token' => bcrypt($item->token)]); }
     return view('welcome');
 });
 
@@ -61,5 +63,13 @@ Route::get('admin/leave-applications', 'AdminController@show_all_leave_request')
 
 //ADMIN Approval
 Route::get('admin/{users}/admin-edit', 'AdminController@admin_edit');
-
 Route::patch('admin/{users}/admin-edit', 'AdminController@admin_approval');
+
+
+
+Route::get('admin/view-users', 'AdminController@view_users')->name('admin.view.user');
+Route::get('admin/add-user', 'AdminController@add_user')->name('admin.add.user');
+Route::post('admin/add-user', 'AdminController@post_user')->name('admin.post.user');
+Route::get('admin/view-user/{user}/edit', 'AdminController@edit_user')->name('admin.edit.user');
+Route::put('admin/update-user/{user}', 'AdminController@update_user')->name('admin.update.user');
+Route::get('admin/delete-user/{user}', 'AdminController@delete_user')->name('admin.delete.user');

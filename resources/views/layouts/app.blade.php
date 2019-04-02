@@ -66,7 +66,9 @@
 
 
                     @if(Auth::user()->hasRole('admin'))
-
+                    <li class="nav-item">
+                    <a class="nav-link" href="{{ asset('admin/view-users')}}">{{ __('Users') }}</a>
+                    </li>
                     <li class="nav-item">
                     <a class="nav-link" href="{{ asset('admin/leave-applications')}}">{{ __('Leave Applications') }}</a>
                     </li>
@@ -75,8 +77,7 @@
                     <li class="nav-item">
                     <a class="nav-link" href="{{ asset('supervisor_approval')}}">{{ __('Approve Leave') }}</a>
                     </li>
-
-                    @endif
+                 @endif
 
 
 

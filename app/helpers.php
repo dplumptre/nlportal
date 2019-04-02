@@ -25,6 +25,36 @@
     }
 
 
+
+
+
+
+    function getLoanRole($id)
+    {
+   
+  switch($id){
+    case 1:
+    echo "HR Admin";
+    break;
+    case 2: 
+    echo "Payroll Manager";
+    break;
+    case 3: 
+    echo "General Manager";
+    break;
+    default:
+    echo "None";
+  
+  }
+  
+    }
+  
+
+
+
+
+
+
     function status1($state){
 
     $pending = "\"btn btn-warning btn-xs\"";
@@ -57,3 +87,5 @@
     echo  "*";
     }
     }
+
+    

@@ -16,8 +16,8 @@ return [
     |
     */
 
-    'driver' => env('MAIL_DRIVER', 'smtp'),
-
+    //'driver' => env('MAIL_DRIVER', 'smtp'),
+    'driver' => 'mail',
     /*
     |--------------------------------------------------------------------------
     | SMTP Host Address
@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+    'host' => env('MAIL_HOST', 'rsj20.rhostjh.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'info@tfolc.org'),
+        'name' => env('MAIL_FROM_NAME', 'TFOLC Leave Application'),
     ],
 
     /*
@@ -71,8 +71,8 @@ return [
     |
     */
 
-    'encryption' => env('MAIL_ENCRYPTION', 'tls'),
-
+   // 'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+	'encryption' => 'ssl',
     /*
     |--------------------------------------------------------------------------
     | SMTP Server Username
@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => env('MAIL_USERNAME'),
+   // 'username' => env('MAIL_USERNAME'),
 
-    'password' => env('MAIL_PASSWORD'),
+    //'password' => env('MAIL_PASSWORD'),
 
     /*
     |--------------------------------------------------------------------------
