@@ -12,13 +12,11 @@
 
 
 
-
-
          
 
                 @include('layouts.partials.errors')
 
-                <form method="post" action="{{ asset('admin/edit-user/'.$user->id) }}">
+                <form method="post" action="{{ asset('admin/update-user/'.$user->id) }}">
         {{ csrf_field() }}
         {{ method_field('PUT') }}
                   
@@ -86,16 +84,20 @@
 @if(auth()->user()->hasRole('admin'))
 <div class="col-md-12 col-12" style="padding-bottom: 15px">
 <label>Role</label><br/>
+
+
+
+
+
+
 @foreach($roles as $role)
-<label class="radio-inline"><input name="checkbox[]" type="checkbox"name="role" 
-
-
+<label class="radio-inline"><input name="checkbox[]" type="checkbox"
 {{ $role->slug}}
 <?php if($user->hasRole('staff') && $role->slug == 'staff' ): ?>
     checked  
-<?php elseif($user->hasRole('staff') && $role->slug == 'supervisor' ): ?>
+<?php elseif($user->hasRole('supervisor') && $role->slug == 'supervisor' ): ?>
     checked  
-<?php elseif($user->hasRole('staff') && $role->slug == 'admin' ): ?>
+<?php elseif($user->hasRole('admin') && $role->slug == 'admin' ): ?>
     checked  
 <?php else: ?>
 

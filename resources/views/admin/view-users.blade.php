@@ -42,7 +42,7 @@
 <a href="#" data-toggle="tooltip" title="View User">
 <i class="fa fa-eye fa-2" style="padding-right: 8px; padding-left: 8px;"></i> 
 </a>
-<a href="{{-- asset('admin/view-user/'.$employee->id.'/edit') --}}" data-toggle="tooltip" title="Edit User">
+<a href="{{ asset('admin/view-user/'.$employee->id.'/edit') }}" data-toggle="tooltip" title="Edit User">
 <i class="fa fa-edit fa-2" style="padding-right: 8px; padding-left: 8px;"></i> 
 </a>
 <a href="{{ asset('admin/delete-user/'.$employee->id ) }}" onclick="javascript:return confirm('Are you sure to delete {{$employee->name }}')"  data-toggle="tooltip" title="Delete User">

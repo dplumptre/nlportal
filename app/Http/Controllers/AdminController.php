@@ -10,7 +10,7 @@ use App\Grade;
 use App\Employeetype;
 use App\Role;
 use App\Loan_role;
-
+use App\Loan;
 
 class AdminController extends Controller
 {
@@ -101,6 +101,10 @@ class AdminController extends Controller
 
 
 	public function delete_user(User $user){
+		$loan= Loan::where('user_id',$user->id)->first();
+        if($loan->count() > 0){
+			$loan->delete();
+		}
 		$user->delete();
 		return back();
 	}
@@ -194,7 +198,80 @@ class AdminController extends Controller
 
 
 
+	public function update_user(Request $request, User $user)
+	{
 
+
+
+   #return $request->department;
+
+
+
+		$this->validate($request, [
+			'name' => 'required|string|max:255',
+
+		]);
+
+	      $check = User::with('roles')->where('department_id', '=', $request->department)->get();
+			  
+			  
+
+	   
+
+	      foreach($check as $user){
+		  
+			foreach($user->roles as $role){
+
+				 #return $role->slug;
+				 if ($role->slug == "supervisor"  && in_array($role->id,$request->checkbox)){
+				  $request->Session()->flash('message.content', 'A supervisor already exist in this department!');
+				  $request->session()->flash('message.level', 'danger');
+				  return redirect('admin/view-users');	
+				 }
+
+
+			}
+		}
+  
+
+
+
+
+
+
+
+       $d = Department::find($request->department);
+
+
+	    $user = User::find($user->id);
+		$user->name = $request->name;
+		$user->email = $request->email;
+		$user->updated_at = $request->updated_at;
+		$user->address = $request->address;
+		//$user->role = $request->role;
+		$user->gender = $request->gender;
+		$user->mobile = $request->mobile;
+		$user->dob = $request->dob;
+		$user->marital_status = $request->marital_status;
+		$user->department = $d->name;
+		$user->grade = $request->grade;
+		$user->employee_type = $request->employee_type;
+		$user->job_title = $request->job_title;
+		$user->date_of_hire = $request->date_of_hire;
+		$user->entitled = $request->entitled;
+		$user->balance = $request->balance;
+		$user->loan_roles_id = $request->loan_roles_id;
+		$user->department_id = $request->department;
+		$user->updated_at = date('Y-m-d H:i:s');
+		$user->update();
+		$user->roles()->sync($request->checkbox);
+		// $user->update($request->all());
+			$request->Session()->flash('message.content', 'Employee details was successfully updated!');
+		  	$request->session()->flash('message.level', 'success');
+
+		return redirect('admin/view-users');
+		
+	}
 
 
 
