@@ -68,7 +68,11 @@ class HomeController extends Controller
 	{
 
 
-		return $supervisor_email ."    ".$applicat_email;
+		   	$supervisor_email = $request->unit_head_email;
+			$applicant_name = $request->user()->name;
+
+
+	
 
 		$this->validate($request, [
             'reason' => 'required|string|max:255',
