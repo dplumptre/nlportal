@@ -102,7 +102,10 @@ class AdminController extends Controller
 
 	public function delete_user(User $user){
 		$loan= Loan::where('user_id',$user->id)->first();
-        if($loan->count() > 0){
+
+
+
+        if($loan){
 			$loan->delete();
 		}
 		$user->delete();
@@ -201,9 +204,9 @@ class AdminController extends Controller
 	public function update_user(Request $request, User $user)
 	{
 
+		
 
-
-   #return $request->department;
+  #return $user;
 
 
 
@@ -211,6 +214,8 @@ class AdminController extends Controller
 			'name' => 'required|string|max:255',
 
 		]);
+
+		  $d = Department::find($request->department);
 
 	      $check = User::with('roles')->where('department_id', '=', $request->department)->get();
 			  
@@ -240,31 +245,58 @@ class AdminController extends Controller
 
 
 
-       $d = Department::find($request->department);
+       
+
+	    
+		// $user->name = $request->name;
+		// $user->email = $request->email;
+		// $user->updated_at = $request->updated_at;
+		// $user->address = $request->address;
+		// //$user->role = $request->role;
+		// $user->gender = $request->gender;
+		// $user->mobile = $request->mobile;
+		// $user->dob = $request->dob;
+		// $user->marital_status = $request->marital_status;
+		// $user->department = $d->name;
+		// $user->grade = $request->grade;
+		// $user->employee_type = $request->employee_type;
+		// $user->job_title = $request->job_title;
+		// $user->date_of_hire = $request->date_of_hire;
+		// $user->entitled = $request->entitled;
+		// $user->balance = $request->balance;
+		// $user->loan_roles_id = $request->loan_roles_id;
+		// $user->department_id = $request->department;
+		// $user->updated_at = date('Y-m-d H:i:s');
+		// $user->save();
+		// $user->roles()->sync($request->checkbox);
 
 
-	    $user = User::find($user->id);
-		$user->name = $request->name;
-		$user->email = $request->email;
-		$user->updated_at = $request->updated_at;
-		$user->address = $request->address;
-		//$user->role = $request->role;
-		$user->gender = $request->gender;
-		$user->mobile = $request->mobile;
-		$user->dob = $request->dob;
-		$user->marital_status = $request->marital_status;
-		$user->department = $d->name;
-		$user->grade = $request->grade;
-		$user->employee_type = $request->employee_type;
-		$user->job_title = $request->job_title;
-		$user->date_of_hire = $request->date_of_hire;
-		$user->entitled = $request->entitled;
-		$user->balance = $request->balance;
-		$user->loan_roles_id = $request->loan_roles_id;
-		$user->department_id = $request->department;
-		$user->updated_at = date('Y-m-d H:i:s');
-		$user->update();
-		$user->roles()->sync($request->checkbox);
+
+		$update = User::where('id', $user->id)
+			->update([
+
+			'name' => $request->name,
+			'email' => $request->email,
+			'address' => $request->address,
+			'gender' => $request->gender,
+			'mobile' => $request->mobile,
+			'dob' => $request->dob,
+			'marital_status' => $request->marital_status,
+			'department' => $d->name,
+			'grade' => $request->grade,
+			'employee_type' => $request->employee_type,
+			'job_title' => $request->job_title,
+			'date_of_hire' => $request->date_of_hire,
+			'entitled' => $request->entitled,
+			'balance' => $request->balance,
+			'loan_roles_id' => $request->loan_roles_id,
+			'department_id' => $request->department,
+			'updated_at' => date('Y-m-d H:i:s'),
+			
+			
+			]);
+			$user->roles()->sync($request->checkbox);
+		
 		// $user->update($request->all());
 			$request->Session()->flash('message.content', 'Employee details was successfully updated!');
 		  	$request->session()->flash('message.level', 'success');

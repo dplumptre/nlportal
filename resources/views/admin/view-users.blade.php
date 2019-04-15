@@ -36,7 +36,11 @@
 <td class="text-center" style="width: 1%" >{{$rows = $rows + 1 }}</td>
 <td class="text-center" style="width: 30%" > {{ $employee->name }}</td>
 <td class="text-center">{{ $employee->departments->name }}</td>
-<td class="text-center">{{ $employee->role }}</td>
+<td class="text-center">
+@foreach($employee->roles as $role)
+{{ $role->role }} /
+@endforeach
+</td>
 <td class="text-center"><small>{{ date('d-M-Y ', strtotime($employee->date_of_hire)) }} </small></td>
 <td class="text-center">
 <a href="#" data-toggle="tooltip" title="View User">
