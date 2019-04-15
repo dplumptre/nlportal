@@ -204,9 +204,6 @@ class AdminController extends Controller
 	public function update_user(Request $request, User $user)
 	{
 
-		
-
-  #return $user;
 
 
 
@@ -215,62 +212,73 @@ class AdminController extends Controller
 
 		]);
 
-		  $d = Department::find($request->department);
+		$d = Department::find($request->department);
+		$role_supervisor = Role::where('slug','supervisor')->first();
 
-	      $check = User::with('roles')->where('department_id', '=', $request->department)->get();
-			  
-			  
+		#return $role_supervisor->id;
+		
+		$check = User::where('department_id', '=', $request->department)->whereHas('roles', function($q)use ($role_supervisor) {
+			$q->where('role_id',$role_supervisor->id );
+		})
+		->first();  
 
-	   
+	  // return $check;
 
-	      foreach($check as $user){
-		  
-			foreach($user->roles as $role){
+        if( in_array($role_supervisor->id ,$request->checkbox)  && $check !=""  ){
 
-				 #return $role->slug;
-				 if ($role->slug == "supervisor"  && in_array($role->id,$request->checkbox)){
-				  $request->Session()->flash('message.content', 'A supervisor already exist in this department!');
-				  $request->session()->flash('message.level', 'danger');
-				  return redirect('admin/view-users');	
-				 }
-
-
-			}
+			
+				$request->Session()->flash('message.content', 'A supervisor already exist in this department!');
+				$request->session()->flash('message.level', 'danger');
+				return redirect('admin/view-users');	
+			  	
 		}
+
+
+  #return $user->roles;
+
+
+	
+
+
+
   
 
 
 
 
-
+				// $u = User::find($user->id);
+				// $u->name = $request->name;
+				// $u->email = $request->email;
+				// $u->updated_at = $request->updated_at;
+				// $u->address = $request->address;
+				// $u->gender = $request->gender;
+				// $u->mobile = $request->mobile;
+				// $u->dob = $request->dob;
+				// $u->marital_status = $request->marital_status;
+				// $u->department = $d->name;
+				// $u->grade = $request->grade;
+				// $u->employee_type = $request->employee_type;
+				// $u->job_title = $request->job_title;
+				// $u->date_of_hire = $request->date_of_hire;
+				// $u->entitled = $request->entitled;
+				// $u->balance = $request->balance;
+				// $u->loan_roles_id = $request->loan_roles_id;
+				// $u->department_id = $request->department;
+				// $u->updated_at = date('Y-m-d H:i:s');
+				// $u->save();
+				// $u->roles()->sync($request->checkbox);
 
 
        
 
 	    
-		// $user->name = $request->name;
-		// $user->email = $request->email;
-		// $user->updated_at = $request->updated_at;
-		// $user->address = $request->address;
-		// //$user->role = $request->role;
-		// $user->gender = $request->gender;
-		// $user->mobile = $request->mobile;
-		// $user->dob = $request->dob;
-		// $user->marital_status = $request->marital_status;
-		// $user->department = $d->name;
-		// $user->grade = $request->grade;
-		// $user->employee_type = $request->employee_type;
-		// $user->job_title = $request->job_title;
-		// $user->date_of_hire = $request->date_of_hire;
-		// $user->entitled = $request->entitled;
-		// $user->balance = $request->balance;
-		// $user->loan_roles_id = $request->loan_roles_id;
-		// $user->department_id = $request->department;
-		// $user->updated_at = date('Y-m-d H:i:s');
-		// $user->save();
-		// $user->roles()->sync($request->checkbox);
+
+		
+		// $uptuser = User::find($user->id);
+		// $uptuser->roles()->sync($request->checkbox);
 
 
+		#return $user->id;
 
 		$update = User::where('id', $user->id)
 			->update([
@@ -295,9 +303,10 @@ class AdminController extends Controller
 			
 			
 			]);
-			$user->roles()->sync($request->checkbox);
+
+
 		
-		// $user->update($request->all());
+			$user->roles()->sync($request->checkbox);
 			$request->Session()->flash('message.content', 'Employee details was successfully updated!');
 		  	$request->session()->flash('message.level', 'success');
 

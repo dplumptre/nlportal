@@ -1,3 +1,16 @@
+
+<?php 
+
+// $user = new App\User();
+// $user->name = 'demmy';
+// $user->password = Hash::make('123456');
+// $user->email = 'demmy@example.com';
+// $user->loan_roles_id = 1;
+// $user->department_id= 1;
+// $user->save();
+?>
+
+
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
