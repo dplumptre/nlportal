@@ -7,7 +7,8 @@ use App\User;
 use App\Leave;
 use App\Department;
 use App\Role;
-
+use App\Mail\firstmail;
+use Illuminate\Support\Facades\Mail;
 class HomeController extends Controller
 {
     /**
@@ -66,6 +67,8 @@ class HomeController extends Controller
     public function postApply(Request $request, Leave $leave, User $user)
 	{
 
+
+		return $supervisor_email ."    ".$applicat_email;
 
 		$this->validate($request, [
             'reason' => 'required|string|max:255',
@@ -136,6 +139,7 @@ class HomeController extends Controller
 		// 		});  			
 			
 		// }
+		Mail::to($supervisor_email)->send(new firstmail($applicant_name));
 		return redirect('status/'.$request->user()->id);
 	}
 
