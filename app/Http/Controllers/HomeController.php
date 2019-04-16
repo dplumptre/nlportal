@@ -187,7 +187,7 @@ class HomeController extends Controller
 			if($request->approval_status == "Approved"){
 				#SENDING MAIL TO HR COS SUPERVISOR HAS APPROVED
 				foreach($admin_emails as $ae){
-			     	Mail::to($ae)->send(new MailToAdminAfterSupervisorApproves($staff));
+			     	Mail::to($ae->email)->send(new MailToAdminAfterSupervisorApproves($staff));
 			    }
 				#SENDING TO USER THAT SUPERVISOR HAS APPROVED
 				Mail::to($staff->email)->send(new MailToStaffAfterSupervisorApproves($staff));
