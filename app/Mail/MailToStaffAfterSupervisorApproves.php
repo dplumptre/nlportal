@@ -31,6 +31,10 @@ class MailToStaffAfterSupervisorApproves extends Mailable
      */
     public function build()
     {	
-        return $this->view('mail.approvestatusone');
+
+        return $this->subject('TFOLC LEAVE PORTAL')
+                ->view('mail.approvestatusone');
+
+
     }
 }

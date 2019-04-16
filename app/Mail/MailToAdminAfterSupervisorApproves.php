@@ -33,7 +33,7 @@ class MailToAdminAfterSupervisorApproves extends Mailable
     public function getunit($val)
     {
        $d = Department::where('id',$val)->first();
-       return $d;
+       return $d->name;
     }
 
 
@@ -45,6 +45,7 @@ class MailToAdminAfterSupervisorApproves extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.admin_reminder_to_approve');
+        return $this->subject('TFOLC LEAVE PORTAL')
+                    ->view('mail.admin_reminder_to_approve');
     }
 }

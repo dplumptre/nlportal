@@ -31,6 +31,6 @@ class firstmail extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.firstmail');
+        return $this->subject('TFOLC LEAVE PORTAL')->view('mail.firstmail');
     }
 }
