@@ -114,35 +114,7 @@ class HomeController extends Controller
         $request->Session()->flash('message.content', 'Your leave application was successful!');
 		$request->session()->flash('message.level', 'success');
 
-		// if ($leave->save()) {
-		
 
-
-		// 		#SEND EMAIL
-		// 		$supervisor = $request->unit_head_name;
-		// 		$supervisor_email = $request->unit_head_email;
-		// 		$applicant_name = $request->user()->name;
-		// 		$applicat_email = $request->user()->email;
-
-
-		// 		if($supervisor_email == "" || empty($supervisor_email)){
-
-
-		// 			$d = Department::where('slug','admin')->first();
-		// 			$hremails = User::where('role', '=', 'admin')
-		// 			->where('department_id', '=', $d->id)->first();
-
-
-		// 			$supervisor_email = $hremails->email;
-		// 		}
-
-
-		// 		Mail::send('mail.firstmail', array('supervisor'=> $supervisor,'applicant_name'=> $applicant_name), function($message) use ($supervisor_email) 
-		// 		{
-		// 			$message->to($supervisor_email,'TFOLC LEAVE APP')->subject('Leave Request has been sent to you');
-		// 		});  			
-			
-		// }
 		Mail::to($supervisor_email)->send(new firstmail($applicant_name));
 		return redirect('status/'.$request->user()->id);
 	}
@@ -197,6 +169,40 @@ class HomeController extends Controller
 			]);
 
 			$users->update($request->all());
+
+
+		#Geting EMAIL  OF ADMIN
+		$admin_emails = User::whereHas('roles', function($q) {
+			$q->where('slug','admin' );
+		})
+		->get('email'); 
+        #STAFF 
+		$staff = User::where('id',$request->user_id)->first();
+
+
+
+		#return $request->approval_status;
+		
+
+			if($request->approval_status == "Approved"){
+				#SENDING MAIL TO HR COS SUPERVISOR HAS APPROVED
+				foreach($admin_emails as $ae){
+			     	Mail::to($ae)->send(new MailToAdminAfterSupervisorApproves($staff));
+			    }
+				#SENDING TO USER THAT SUPERVISOR HAS APPROVED
+				Mail::to($staff->email)->send(new MailToStaffAfterSupervisorApproves($staff));
+
+			}elseif($request->approval_status ==  "Rejected"){
+
+				Mail::to($staff->email)->send(new RejectedMail($staff));
+				
+			}else{
+
+				return back();
+			}
+
+
+
 
 		return redirect('supervisor_approval');
 
