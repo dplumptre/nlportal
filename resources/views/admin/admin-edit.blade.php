@@ -112,7 +112,7 @@
 
 <input type="hidden" name="date_admin_approved" readonly value="<?php echo date('d-m-y h:i');?>" >
 
-<input type="hidden" name="applicant_name" value="{{$users->name}}" readonly="">
+<input type="hidden" name="user_id" value="{{$users->id}}" readonly="">
 <input type="hidden" name="applicant_email" value="{{$applicant_email}}" readonly="">
 
 <div class="form-group"> <div class=" controls col-md-4 "></div>

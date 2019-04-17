@@ -49,8 +49,8 @@ class AdminController extends Controller
 	public function admin_approval(Request $request, Leave $users)
 	{
 
-		$applicant_name = $request->applicant_name;
-		$applicant_email = $request->applicant_email;
+		#STAFF 
+		$staff = User::where('id',$request->user_id)->first();
 
 
 
@@ -62,7 +62,21 @@ class AdminController extends Controller
         $users->admin_name = $request->user()->admin_name;
         
 
-        $users->update($request->all());
+		$users->update($request->all());
+		
+
+		if($request->approval_status == "Approved"){
+			#SENDING MAIL TO USER COS ADMIN HAS APPROVED
+			Mail::to($staff->email)->send(new MailToAdminAfterAdminApproves($staff));
+
+		}elseif($request->approval_status ==  "Rejected"){
+
+			Mail::to($staff->email)->send(new RejectedMailTwo($staff));
+			
+		}else{
+
+			return back();
+		}
 
 		// if ($users->update($request->all())) {
 		// 	//$users->update();
