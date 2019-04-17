@@ -11,22 +11,15 @@ use App\Mail\firstmail;
 use App\Mail\MailToAdminAfterSupervisorApproves;
 use App\Mail\MailToStaffAfterSupervisorApproves;
 use App\Mail\RejectedMail;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 use Illuminate\Support\Facades\Mail;
+
+
+
+
+
+
+
+
 class HomeController extends Controller
 {
     /**

@@ -11,6 +11,9 @@ use App\Employeetype;
 use App\Role;
 use App\Loan_role;
 use App\Loan;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MailToAdminAfterAdminApproves;
+use App\Mail\RejectedMailTwo;
 
 class AdminController extends Controller
 {
@@ -49,11 +52,13 @@ class AdminController extends Controller
 	public function admin_approval(Request $request, Leave $users)
 	{
 
+          #return $request->admin_approval_status;
+
 		#STAFF 
 		$staff = User::where('id',$request->user_id)->first();
 
 
-
+#return $request->user_id;
 		
 		$this->validate($request, [
 			'hr_signature' => 'required',
@@ -65,11 +70,11 @@ class AdminController extends Controller
 		$users->update($request->all());
 		
 
-		if($request->approval_status == "Approved"){
+		if($request->admin_approval_status == "Approved"){
 			#SENDING MAIL TO USER COS ADMIN HAS APPROVED
 			Mail::to($staff->email)->send(new MailToAdminAfterAdminApproves($staff));
 
-		}elseif($request->approval_status ==  "Rejected"){
+		}elseif($request->admin_approval_status ==  "Rejected"){
 
 			Mail::to($staff->email)->send(new RejectedMailTwo($staff));
 			

@@ -68,12 +68,12 @@
          <div id="div_id_terms" class="checkbox required">
             <label for="hr_signature" class=" requiredField">
                 <input class="input-ms checkboxinput" id="hr_signature" name="hr_signature" style="margin-bottom: 10px" type="checkbox" value="{{ Auth::user()->email }}" />
-                         I <em class="info" style="color: red; padding-right: 10px""> {{ Auth::user()->name }} </em> Approves/Dissaproves this leave request
+                         I <em class="info" style="color: red; padding-right: 10px"> {{ Auth::user()->name }} </em> Approves/Dissaproves this leave request
 
                           @if ($errors->has('hr_signature'))
-                <span class="help-block">
+                <div class="help-block" style="color: red;">
                     <strong>{{ $errors->first('hr_signature') }}</strong>
-                </span>
+                </div>
              @endif
             </label>
         </div>                             
@@ -112,7 +112,7 @@
 
 <input type="hidden" name="date_admin_approved" readonly value="<?php echo date('d-m-y h:i');?>" >
 
-<input type="hidden" name="user_id" value="{{$users->id}}" readonly="">
+<input type="hidden" name="user_id" value="{{$users->user_id}}" readonly="">
 <input type="hidden" name="applicant_email" value="{{$applicant_email}}" readonly="">
 
 <div class="form-group"> <div class=" controls col-md-4 "></div>
