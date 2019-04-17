@@ -31,6 +31,6 @@ class RejectedMailTwo extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.failmailtwo');
+        return $this->subject('TFOLC LEAVE PORTAL')->view('mail.failmailtwo');
     }
 }

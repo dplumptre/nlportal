@@ -31,6 +31,6 @@ class MailToAdminAfterAdminApproves extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.approved_mail');
+        return $this->subject('TFOLC LEAVE PORTAL')->view('mail.approved_mail');
     }
 }
