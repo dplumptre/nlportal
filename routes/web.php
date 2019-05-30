@@ -44,7 +44,8 @@ Route::patch('supervisor/{users}', 'HomeController@supervisor_update')->middlewa
 
 
 
-
+Route::get('leave_return/edit/{id}', 'HomeController@leaveReturn');
+Route::patch('leave_return/{users}', 'HomeController@leave_return_update');
 
 
 /*

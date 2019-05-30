@@ -55,12 +55,12 @@
 
     @elseif(($user->approval_status == "Approved") && ($user->admin_approval_status == "Approved"))
 
-    <a href="#"  data-toggle="tooltip" title="Leave return form">
+    <a href="{{ asset('leave_return/edit/'.$users->id)}}"  data-toggle="tooltip" title="Leave return form">
     <i class="fa fa-table fa-2"></i> 
     </a>
 
     @else
-    *
+    
     @endif
     </td>
     <td class="text-center"style="width: 15%" > {{ $user->admin_remark }} </td>

@@ -137,8 +137,38 @@ class HomeController extends Controller
     return view('status', compact('users'));
     }
 
+	public function leaveReturn($id)
+	{ 
+		$users = Leave::where('user_id',$id)->first();
+		#return $users;
+		return view('leave_return', compact('users'));
+	}
 
 
+	
+	public function leave_return_update(Request $request, Leave $users, User $user)
+	{
+		$this->validate($request, [
+			'resumed_on' => 'required',
+			'returnee_signature' => 'required',
+			]);
+
+		$user = $request->user()->id;
+
+		if ($users->update($request->all())) {
+		
+			$request->Session()->flash('message.content', 'Leave return form status was successfully submitted!');
+				$request->session()->flash('message.level', 'success');
+
+			
+		}
+		
+		return redirect()->action(
+			'HomeController@status', ['id' => $request->user()->id]
+		);
+	}
+
+	
 
 	public function leaveDelete(Leave $users){
 		$users->delete($users);
