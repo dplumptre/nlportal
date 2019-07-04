@@ -63,7 +63,7 @@
                 </a> 
             </td>
 <td class="text-center">
-    <a href="#"  data-toggle="tooltip" title="View Leave History">
+    <a href="{{ asset('admin/'.$request->user_id.'/history')}}"  data-toggle="tooltip" title="View Leave History">
         <i class="fa fa-calendar fa-3"  style="padding-right: 10px"></i>
     </a>
     <a href="{{ asset('admin/'.$request->id.'/admin-edit') }}"  data-toggle="tooltip" title="Approve/Dissaprove Leave as HR">

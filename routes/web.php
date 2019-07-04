@@ -1,5 +1,9 @@
 <?php
 
+use App\User;
+
+use App\Role;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,9 +16,28 @@
 */
 
 Route::get('/', function () {
-    $items = \DB::table('password_resets')->where('token', 'not like', '$%')->orderBy('created_at', 'desc')->get();
-foreach ($items as $item) { \DB::table('password_resets')->where('email', $item->email)->update(['token' => bcrypt($item->token)]); }
-    return view('welcome');
+
+    // $user = User::create([
+    //     'name' => 'Plumptre',
+    //     'email'=> 'dplumptre1@gmail.com',
+    //     'password'=> bcrypt('oh12345'),
+    //     'loan_roles_id'=>1,
+    //     'department_id'=>4,
+    // ]);
+
+    // $user =User::where('email','dplumptre1@gmail.com')->first();
+
+    // // $role_admin = Role::where('slug','admin')->first();
+    // $role_staff = Role::where('slug','staff')->first();
+    // $role_supervisor = Role::where('slug','supervisor')->first();
+    // $user->roles()->attach($role_supervisor);
+    // $user->roles()->attach($role_staff);  
+    // $user->roles()->attach($role_admin);
+
+//     $items = \DB::table('password_resets')->where('token', 'not like', '$%')->orderBy('created_at', 'desc')->get();
+// foreach ($items as $item) { \DB::table('password_resets')->where('email', $item->email)->update(['token' => bcrypt($item->token)]); }
+//  
+   return view('welcome');
 });
 
 Auth::routes();
@@ -74,3 +97,6 @@ Route::post('admin/add-user', 'AdminController@post_user')->name('admin.post.use
 Route::get('admin/view-user/{user}/edit', 'AdminController@edit_user')->name('admin.edit.user');
 Route::put('admin/update-user/{user}', 'AdminController@update_user')->name('admin.update.user');
 Route::get('admin/delete-user/{user}', 'AdminController@delete_user')->name('admin.delete.user');
+
+
+Route::get('admin/{user}/history', 'AdminController@leave_history');

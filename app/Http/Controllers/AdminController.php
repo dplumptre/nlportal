@@ -36,7 +36,12 @@ class AdminController extends Controller
 	}
 
 
+	public function leave_history($user){
+		$users = User::find($user);
 
+		//return $users;
+		return view('admin.history', compact('users'));
+	}
 
 
 	public function admin_edit(Leave $users)
