@@ -26,8 +26,25 @@ class AdminController extends Controller
         $this->middleware('admin');
     }
 
+    public function reset()
+	{
+		return view('admin.reset');
+	}
 
-    
+
+	public function reset_column(Request $request)
+	{
+
+		$resetLeave = Leave::where('days_hr_approved', '>', 0)->update(array('days_hr_approved' => 0));
+		$resetAllowance = Leave::where('allowance', '>', 0)->update(array('allowance' => 0));
+
+		$request->Session()->flash('message.content', 'RESET was successfully executed!');
+	  	$request->session()->flash('message.level', 'success');
+
+		return redirect('admin/reset');
+	}
+
+
 	public function show_all_leave_request(Request $request){
 
 		$users = $request->user();
@@ -49,7 +66,7 @@ class AdminController extends Controller
 
 		$app_email = User::find($users->user_id);
         $applicant_email = $app_email->email;
-        
+
 		return view('admin/admin-edit', compact('users','applicant_email'));
 	}
 
@@ -59,21 +76,21 @@ class AdminController extends Controller
 
           #return $request->admin_approval_status;
 
-		#STAFF 
+		#STAFF
 		$staff = User::where('id',$request->user_id)->first();
 
 
 #return $request->user_id;
-		
+
 		$this->validate($request, [
 			'hr_signature' => 'required',
 		]);
 
         $users->admin_name = $request->user()->admin_name;
-        
+
 
 		$users->update($request->all());
-		
+
 
 		if($request->admin_approval_status == "Approved"){
 			#SENDING MAIL TO USER COS ADMIN HAS APPROVED
@@ -82,7 +99,7 @@ class AdminController extends Controller
 		}elseif($request->admin_approval_status ==  "Rejected"){
 
 			Mail::to($staff->email)->send(new RejectedMailTwo($staff));
-			
+
 		}else{
 
 			return back();
@@ -90,29 +107,29 @@ class AdminController extends Controller
 
 		// if ($users->update($request->all())) {
 		// 	//$users->update();
-			
+
 		// 	if($request->admin_approval_status == "Approved"){
 
-		// 		Mail::send('mail.approved_mail', array('applicant_name'=> $applicant_name), function($message) use ($applicant_email) 
+		// 		Mail::send('mail.approved_mail', array('applicant_name'=> $applicant_name), function($message) use ($applicant_email)
 		// 		{
 		// 			$message->to($applicant_email,'TFOLC LEAVE APP')->subject('Your Leave has been approved!');
-		// 		});  
+		// 		});
 
 		// 	}
 
-			
+
 		// 	if($request->admin_approval_status == "Rejected"){
-				
+
 		// 		Mail::send('mail.failmailtwo', array('applicant_name'=> $applicant_name), function($message) use ($applicant_email)
 		// 		{
 		// 			$message->to($applicant_email,'TFOLC LEAVE APP')->subject('Result of your Leave Application!');
-		// 		});  
+		// 		});
 
 		// 	}
 		// 		$request->Session()->flash('message.content', 'Leave status was successfully updated!');
 		// 	  	$request->session()->flash('message.level', 'success');
         // }
-        
+
 
         $request->Session()->flash('message.content', 'Leave status was successfully updated!');
         $request->session()->flash('message.level', 'success');
@@ -175,7 +192,7 @@ class AdminController extends Controller
 
 
         $role_user = Role::where('slug',$request->role)->first();
-   
+
 
 
 
@@ -194,9 +211,9 @@ class AdminController extends Controller
 		$user->entitled = $request->entitled;
 		$user->loan_roles_id = $request->loan_roles_id;
 		$user->department_id = $request->department;
-		
 
-		
+
+
 
 
 
@@ -206,7 +223,7 @@ class AdminController extends Controller
 				$request->Session()->flash('message.content','A supervisor already exist in this department!');
 				$request->session()->flash('message.level', 'danger');
 
-				return back();	
+				return back();
 			}
 		}
 
@@ -240,32 +257,32 @@ class AdminController extends Controller
 		$role_supervisor = Role::where('slug','supervisor')->first();
 
 		#return $role_supervisor->id;
-		
+
 		$check = User::where('department_id', '=', $request->department)->whereHas('roles', function($q)use ($role_supervisor) {
 			$q->where('role_id',$role_supervisor->id );
 		})
-		->first();  
+		->first();
 
 	  // return $check;
 
         if( in_array($role_supervisor->id ,$request->checkbox)  && $check !=""  ){
 
-			
+
 				$request->Session()->flash('message.content', 'A supervisor already exist in this department!');
 				$request->session()->flash('message.level', 'danger');
-				return redirect('admin/view-users');	
-			  	
+				return redirect('admin/view-users');
+
 		}
 
 
   #return $user->roles;
 
 
-	
 
 
 
-  
+
+
 
 
 
@@ -293,11 +310,11 @@ class AdminController extends Controller
 				// $u->roles()->sync($request->checkbox);
 
 
-       
 
-	    
 
-		
+
+
+
 		// $uptuser = User::find($user->id);
 		// $uptuser->roles()->sync($request->checkbox);
 
@@ -324,18 +341,18 @@ class AdminController extends Controller
 			'loan_roles_id' => $request->loan_roles_id,
 			'department_id' => $request->department,
 			'updated_at' => date('Y-m-d H:i:s'),
-			
-			
+
+
 			]);
 
 
-		
+
 			$user->roles()->sync($request->checkbox);
 			$request->Session()->flash('message.content', 'Employee details was successfully updated!');
 		  	$request->session()->flash('message.level', 'success');
 
 		return redirect('admin/view-users');
-		
+
 	}
 
 

@@ -139,7 +139,7 @@ class HomeController extends Controller
 
 	public function leaveReturn($id)
 	{ 
-		$users = Leave::where('user_id',$id)->first();
+		$users = Leave::where('id',$id)->first();
 		#return $users;
 		return view('leave_return', compact('users'));
 	}

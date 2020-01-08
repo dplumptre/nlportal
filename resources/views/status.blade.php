@@ -55,7 +55,7 @@
 
     @elseif(($user->approval_status == "Approved") && ($user->admin_approval_status == "Approved"))
 
-    <a href="{{ asset('leave_return/edit/'.$users->id)}}"  data-toggle="tooltip" title="Leave return form">
+    <a href="{{ asset('leave_return/edit/'.$user->id)}}"  data-toggle="tooltip" title="Leave return form">
     <i class="fa fa-table fa-2"></i> 
     </a>
 

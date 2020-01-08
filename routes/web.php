@@ -31,12 +31,12 @@ Route::get('/', function () {
     // $role_staff = Role::where('slug','staff')->first();
     // $role_supervisor = Role::where('slug','supervisor')->first();
     // $user->roles()->attach($role_supervisor);
-    // $user->roles()->attach($role_staff);  
+    // $user->roles()->attach($role_staff);
     // $user->roles()->attach($role_admin);
 
 //     $items = \DB::table('password_resets')->where('token', 'not like', '$%')->orderBy('created_at', 'desc')->get();
 // foreach ($items as $item) { \DB::table('password_resets')->where('email', $item->email)->update(['token' => bcrypt($item->token)]); }
-//  
+//
    return view('welcome');
 });
 
@@ -49,7 +49,7 @@ Auth::routes();
 |--------------------------------------------------------------------------
 |
 | Here is the control for ordinary users
-| 
+|
 |
 */
 Route::get('access-denied', 'HomeController@accessDenied')->name('home.access.denied');
@@ -77,7 +77,7 @@ Route::patch('leave_return/{users}', 'HomeController@leave_return_update');
 |--------------------------------------------------------------------------
 |
 | Here is the control for ordinary users
-| 
+|
 |
 */
 
@@ -97,6 +97,11 @@ Route::post('admin/add-user', 'AdminController@post_user')->name('admin.post.use
 Route::get('admin/view-user/{user}/edit', 'AdminController@edit_user')->name('admin.edit.user');
 Route::put('admin/update-user/{user}', 'AdminController@update_user')->name('admin.update.user');
 Route::get('admin/delete-user/{user}', 'AdminController@delete_user')->name('admin.delete.user');
-
-
 Route::get('admin/{user}/history', 'AdminController@leave_history');
+
+
+//RESET COLUMN
+
+Route::get('admin/reset', 'AdminController@reset');
+
+Route::post('admin/reset_leave', 'AdminController@reset_column')->name('admin.post.reset.leave');
