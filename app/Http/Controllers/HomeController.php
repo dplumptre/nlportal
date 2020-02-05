@@ -11,6 +11,7 @@ use App\Mail\firstmail;
 use App\Mail\MailToAdminAfterSupervisorApproves;
 use App\Mail\MailToStaffAfterSupervisorApproves;
 use App\Mail\RejectedMail;
+use App\Mail\Reliever;
 use Illuminate\Support\Facades\Mail;
 
 
@@ -38,7 +39,7 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    { 
+    {
         // $role_staff = Role::where('slug','staff')->first();
         // $role_supervisor = Role::where('slug','supervisor')->first();
         // $role_admin = Role::where('slug','admin')->first();
@@ -51,7 +52,7 @@ class HomeController extends Controller
 
 
 	public function accessDenied()
-    { 
+    {
         return view('access-denied');
     }
 
@@ -64,7 +65,7 @@ class HomeController extends Controller
         				->where('approval_status', '=', "Approved")
         				->where('admin_approval_status', '=', "Approved")
         				->where('days_hr_approved', '>', 0)->get();
-    
+
         $allowance = $leave->count();
 		$relievers = User::where('department_id', '=', auth()->user()->department_id)->get();
 
@@ -79,11 +80,16 @@ class HomeController extends Controller
 	{
 
 
+     $reliever = User::where('id',$request->reliever_name)->first();
+     // echo   $reliever->name;
+     // echo   $reliever->email;
+
 		   	$supervisor_email = $request->unit_head_email;
-			$applicant_name = $request->user()->name;
+            $applicant_name = $request->user()->name;
+            $applicant_email  =$request->user()->email;
 
 
-	
+
 
 		$this->validate($request, [
             'reason' => 'required|string|max:255',
@@ -98,7 +104,7 @@ class HomeController extends Controller
 			]);
 
 
-		
+
 		$d = Department::find($request->user()->department_id);
 
 		$leave = new Leave;
@@ -107,45 +113,67 @@ class HomeController extends Controller
 		$leave->working_days_no = $request->working_days_no;
 		$leave->resumption_date = $request->resumption_date;
 		$leave->reason = $request->reason;
-		$leave->reliever_name = $request->reliever_name;
+		$leave->reliever_name = $reliever->name;
 		$leave->leave_address = $request->leave_address;
 		$leave->allowance = $request->allowance;
 		$leave->approval_status = $request->approval_status;
 		$leave->mobile = $request->mobile;
 		$leave->leave_type = $request->leave_type;
 		$leave->unit_head_name = $request->unit_head_name;
-				
+
 		$leave->user_id = $request->user()->id;
 		$leave->name = $request->user()->name;
 		$leave->department = $d->name ;
 		$leave->department_id = $request->user()->department_id;
 		$leave->grade = $request->user()->grade;
         $leave->save();
-        
+
         $request->Session()->flash('message.content', 'Your leave application was successful!');
 		$request->session()->flash('message.level', 'success');
 
 
-		Mail::to($supervisor_email)->send(new firstmail($applicant_name));
-		return redirect('status/'.$request->user()->id);
+
+   // echo   $reliever->name;
+   // echo  $applicant_name;
+
+        $input = array(
+            'applicant_name'     => $applicant_name,
+            'reliever_name'     => $reliever->name,
+            'leave_start'     => $request->leave_starts,
+            'leave_end'     => $request->leave_ends,
+           );
+
+    //    Mail::to($reliever->email)->send(new reliever($mailData));
+        Mail::to($reliever->email)->send(new Reliever($input));
+
+	 	Mail::to($supervisor_email)->send(new firstmail($applicant_name));
+         return redirect('status/'.$request->user()->id);
+
+
+
+
+
+
+
+
 	}
 
 
 
 
-    public function status(User $users){         
+    public function status(User $users){
     return view('status', compact('users'));
     }
 
 	public function leaveReturn($id)
-	{ 
+	{
 		$users = Leave::where('id',$id)->first();
 		#return $users;
 		return view('leave_return', compact('users'));
 	}
 
 
-	
+
 	public function leave_return_update(Request $request, Leave $users, User $user)
 	{
 		$this->validate($request, [
@@ -156,19 +184,19 @@ class HomeController extends Controller
 		$user = $request->user()->id;
 
 		if ($users->update($request->all())) {
-		
+
 			$request->Session()->flash('message.content', 'Leave return form status was successfully submitted!');
 				$request->session()->flash('message.level', 'success');
 
-			
+
 		}
-		
+
 		return redirect()->action(
 			'HomeController@status', ['id' => $request->user()->id]
 		);
 	}
 
-	
+
 
 	public function leaveDelete(Leave $users){
 		$users->delete($users);
@@ -192,7 +220,6 @@ class HomeController extends Controller
 
     public function supervisor_edit(Leave $users)
 	{
-	
 		return view('supervisor-edit', compact('users'));
 	}
 
@@ -216,14 +243,14 @@ class HomeController extends Controller
 		$admin_emails = User::whereHas('roles', function($q) {
 			$q->where('slug','admin' );
 		})
-		->get('email'); 
-        #STAFF 
+		->get('email');
+        #STAFF
 		$staff = User::where('id',$request->user_id)->first();
 
 
 
 		#return $request->approval_status;
-		
+
 
 			if($request->approval_status == "Approved"){
 				#SENDING MAIL TO HR COS SUPERVISOR HAS APPROVED
@@ -236,7 +263,7 @@ class HomeController extends Controller
 			}elseif($request->approval_status ==  "Rejected"){
 
 				Mail::to($staff->email)->send(new RejectedMail($staff));
-				
+
 			}else{
 
 				return back();
