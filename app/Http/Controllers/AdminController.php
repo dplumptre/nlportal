@@ -55,7 +55,6 @@ class AdminController extends Controller
 
 	public function leave_history($user){
 		$users = User::find($user);
-
 		//return $users;
 		return view('admin.history', compact('users'));
 	}
@@ -142,13 +141,13 @@ class AdminController extends Controller
 
 
 	public function delete_user(User $user){
-		$loan= Loan::where('user_id',$user->id)->first();
+		// $loan= Loan::where('user_id',$user->id)->first();
 
 
 
-        if($loan){
-			$loan->delete();
-		}
+        // if($loan){
+		// 	$loan->delete();
+		// }
 		$user->delete();
 		return back();
 	}
@@ -161,7 +160,7 @@ class AdminController extends Controller
 		$employee_types = Employeetype::all();
 		//$loan_roles = Loan_role::all();
 
-		return view('admin/edit-user', compact('user', 'departments', 'grades', 'employee_types', 'loan_roles','roles'));
+		return view('admin/edit-user', compact('user', 'departments', 'grades', 'employee_types','roles'));
 	}
 
 	public function view_users(){
@@ -180,6 +179,10 @@ class AdminController extends Controller
 
 	public function post_user(Request $request){
 
+
+      
+
+
 		$this->validate($request, [
 			'name' => 'required|string|max:255',
 			'email' => 'required|string|email|max:255|unique:users',
@@ -194,7 +197,7 @@ class AdminController extends Controller
         $role_user = Role::where('slug',$request->role)->first();
 
 
-
+	    $dept = Department::find($request->department);
 
 		$user = new User;
 		$user->name = $request->name;
@@ -203,13 +206,13 @@ class AdminController extends Controller
 		$user->password = bcrypt($request->password);
 		$user->marital_status = $request->marital_status;
 		$user->gender = $request->gender;
-		$user->department = $request->department;
+		$user->department = $dept->name;
 		$user->grade = $request->grade;
 		$user->employee_type = $request->employee_type;
 		$user->date_of_hire = $request->date_of_hire;
 		$user->job_title = $request->job_title;
 		$user->entitled = $request->entitled;
-		$user->loan_roles_id = $request->loan_roles_id;
+		//$user->loan_roles_id = $request->loan_roles_id;
 		$user->department_id = $request->department;
 
 
@@ -217,14 +220,16 @@ class AdminController extends Controller
 
 
 
-		if($request->role == "supervisor"){
-			$check = User::where('department_id', '=', $request->department)->count();
-			if ($check > 0 ) {
+		
+	if($request->role === "supervisor"){
+	$allusersdept = User::where('department_id', '=', $request->department)->get();
+		foreach($allusersdept as $usr){
+			if($usr->hasRole('supervisor')){
 				$request->Session()->flash('message.content','A supervisor already exist in this department!');
 				$request->session()->flash('message.level', 'danger');
-
 				return back();
 			}
+			} 
 		}
 
 
@@ -261,11 +266,11 @@ class AdminController extends Controller
 		$check = User::where('department_id', '=', $request->department)->whereHas('roles', function($q)use ($role_supervisor) {
 			$q->where('role_id',$role_supervisor->id );
 		})
-		->first();
+		->get();
 
-	  // return $check;
+	   //return count($check);
 
-        if( in_array($role_supervisor->id ,$request->checkbox)  && $check !=""  ){
+        if( in_array($role_supervisor->id ,$request->checkbox)  && count($check) > 1  ){
 
 
 				$request->Session()->flash('message.content', 'A supervisor already exist in this department!');
@@ -319,7 +324,7 @@ class AdminController extends Controller
 		// $uptuser->roles()->sync($request->checkbox);
 
 
-		#return $user->id;
+	//return $user->id;
 
 		$update = User::where('id', $user->id)
 			->update([
@@ -338,7 +343,7 @@ class AdminController extends Controller
 			'date_of_hire' => $request->date_of_hire,
 			'entitled' => $request->entitled,
 			'balance' => $request->balance,
-			'loan_roles_id' => $request->loan_roles_id,
+			//'loan_roles_id' => $request->loan_roles_id,
 			'department_id' => $request->department,
 			'updated_at' => date('Y-m-d H:i:s'),
 

@@ -52,21 +52,16 @@ Auth::routes();
 |
 |
 */
+Route::get('/profile/{user}', 'HomeController@view_profile');
 Route::get('access-denied', 'HomeController@accessDenied')->name('home.access.denied');
 Route::get('home', 'HomeController@index')->name('home');
 Route::get('apply', 'HomeController@apply')->name('home.apply');
 Route::post('apply', 'HomeController@postApply')->name('home.post.apply');
 Route::get('status/{users}', 'HomeController@status')->name('home.status');
-
 Route::get('leave_delete/{users}', 'HomeController@leaveDelete')->name('home.leave.delete');
-
-
 Route::get('supervisor_approval', 'HomeController@supervisor_approval')->middleware('supervisor');
 Route::get('supervisor/{users}/edit', 'HomeController@supervisor_edit')->middleware('supervisor');
 Route::patch('supervisor/{users}', 'HomeController@supervisor_update')->middleware('supervisor');
-
-
-
 Route::get('leave_return/edit/{id}', 'HomeController@leaveReturn');
 Route::patch('leave_return/{users}', 'HomeController@leave_return_update');
 
@@ -103,5 +98,4 @@ Route::get('admin/{user}/history', 'AdminController@leave_history');
 //RESET COLUMN
 
 Route::get('admin/reset', 'AdminController@reset');
-
 Route::post('admin/reset_leave', 'AdminController@reset_column')->name('admin.post.reset.leave');

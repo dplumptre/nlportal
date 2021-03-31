@@ -54,18 +54,22 @@ class HomeController extends Controller
 	public function accessDenied()
     {
         return view('access-denied');
-    }
+	}
+	
+
+	public function view_profile($id){
+	    $users = User::find($id);
+	    return view('profile', compact('users'));
+	}
 
 
     public function apply()
     {
-
         $leave = Leave::where('user_id', '=', auth()->user()->department_id)
         				->where('allowance', '>', 0)
         				->where('approval_status', '=', "Approved")
         				->where('admin_approval_status', '=', "Approved")
         				->where('days_hr_approved', '>', 0)->get();
-
         $allowance = $leave->count();
 		$relievers = User::where('department_id', '=', auth()->user()->department_id)->get();
 
@@ -122,7 +126,7 @@ class HomeController extends Controller
 		$leave->unit_head_name = $request->unit_head_name;
 
 		$leave->user_id = $request->user()->id;
-		$leave->name = $request->user()->name;
+		//$leave->name = $request->user()->name;
 		$leave->department = $d->name ;
 		$leave->department_id = $request->user()->department_id;
 		$leave->grade = $request->user()->grade;

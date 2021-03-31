@@ -25,13 +25,7 @@ class ArrangeRoleSeeder extends Seeder
         foreach($users as $user){
 
 
-            if($user->role == 'admin'){
-                $user->roles()->attach($role_admin);
-            }elseif($user->role == 'supervisor'){
-                $user->roles()->attach($role_supervisor);
-            }else{
-                $user->roles()->attach($role_staff);  
-            }
+            $user->roles()->attach($role_admin);
 
 
 
