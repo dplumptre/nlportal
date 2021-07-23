@@ -33,6 +33,21 @@ class RoleTableSeeder extends Seeder
         $data->slug = Str::slug('Nurses', '-');
         $data->save();
 
+        $data = new Department();
+        $data->name = 'Doctors';
+        $data->slug = Str::slug('Doctors', '-');
+        $data->save();
+
+        $data = new Department();
+        $data->name = 'Client Services';
+        $data->slug = Str::slug('Client Services', '-');
+        $data->save();
+
+        $data = new Department();
+        $data->name = 'Laboratory';
+        $data->slug = Str::slug('Laboratory', '-');
+        $data->save();
+
 
         $data = new Role();
         $data->role = 'Administrator';
